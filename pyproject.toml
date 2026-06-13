@@ -4,7 +4,13 @@ version = "0.1.0"
 description = "Add your description here"
 requires-python = ">=3.14"
 dependencies = [
+    "ffmpeg-python>=0.2.0",
     "python-dotenv>=1.2.2",
     "python-telegram-bot>=22.7",
     "taskiq>=0.12.4",
+    "taskiq-redis>=1.2.2",
 ]
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"

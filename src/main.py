@@ -1,6 +1,7 @@
 from config import get_bot_token
 from bot import get_application
 
+# точка входа
 def main():
     token = get_bot_token()
     app = get_application(token)

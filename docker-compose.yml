@@ -1,0 +1,44 @@
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: shrimpvid_redis
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    networks:
+      - shrimpvid_network
+
+  worker:
+    build: .
+    container_name: shrimpvid_worker
+    command: taskiq worker src.tasks:broker
+    environment:
+      - PYTHONPATH=/app/src
+      - BOT_TOKEN=${BOT_TOKEN}
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - redis
+    networks:
+      - shrimpvid_network
+    restart: unless-stopped
+
+  bot:
+    build: .
+    container_name: shrimpvid_bot
+    command: python src/main.py
+    environment:
+      - BOT_TOKEN=${BOT_TOKEN}
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - redis
+    networks:
+      - shrimpvid_network
+    restart: unless-stopped
+
+networks:
+  shrimpvid_network:
+    driver: bridge
+
+volumes:
+  redis_data:
