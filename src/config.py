@@ -6,6 +6,7 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / ".env")
 
+
 # токен бота из .env
 def get_bot_token() -> str:
     token = os.getenv("BOT_TOKEN")

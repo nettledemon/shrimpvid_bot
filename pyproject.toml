@@ -5,8 +5,11 @@ description = "Add your description here"
 requires-python = ">=3.14"
 dependencies = [
     "ffmpeg-python>=0.2.0",
+    "mypy>=2.1.0",
+    "pre-commit>=4.6.0",
     "python-dotenv>=1.2.2",
     "python-telegram-bot>=22.7",
+    "ruff>=0.15.18",
     "taskiq>=0.12.4",
     "taskiq-redis>=1.2.2",
     "yt-dlp>=2026.6.9",
@@ -15,3 +18,12 @@ dependencies = [
 [build-system]
 requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
+
+[tool.ruff.lint.per-file-ignores]
+"src/tasks.py" = ["E402"]
+
+[tool.mypy]
+python_version = "3.14"
+ignore_missing_imports = true
+warn_return_any = true
+warn_unused_configs = true

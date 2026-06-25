@@ -1,0 +1,43 @@
+default_stages:
+  - pre-commit
+
+repos:
+  - repo: local
+    hooks:
+      - id: mypy
+        name: mypy
+        entry: mypy --config pyproject.toml .
+        pass_filenames: false
+        language: system
+        types: [ python ]
+  - repo: https://github.com/pre-commit/pygrep-hooks
+    rev: v1.10.0
+    hooks:
+      - id: python-check-blanket-noqa
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.5.0
+    hooks:
+      - id: check-docstring-first
+        stages:
+          - pre-commit
+          - pre-push
+      - id: check-merge-conflict
+        stages:
+          - pre-push
+      - id: trailing-whitespace
+        stages:
+          - pre-commit
+          - pre-push
+      - id: trailing-whitespace
+      - id: end-of-file-fixer
+        exclude: \.svg$
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.12.8
+    hooks:
+      - id: ruff
+      - id: ruff-format
+        language: system
+        files: \.py$
+        stages:
+          - pre-commit
+          - pre-push

@@ -16,12 +16,15 @@ services:
     environment:
       - PYTHONPATH=/app/src
       - BOT_TOKEN=${BOT_TOKEN}
-      - REDIS_URL=redis://redis:6379
+      - REDIS_HOST=${REDIS_HOST:-redis}
+      - COOKIES_FILE=${COOKIES_FILE:-/app/cookies.txt}
     depends_on:
       - redis
     networks:
       - shrimpvid_network
     restart: unless-stopped
+    volumes:
+      - ./cookies.txt:/app/cookies.txt
 
   bot:
     build: .
@@ -29,12 +32,14 @@ services:
     command: python src/main.py
     environment:
       - BOT_TOKEN=${BOT_TOKEN}
-      - REDIS_URL=redis://redis:6379
+      - REDIS_HOST=${REDIS_HOST:-redis}
     depends_on:
       - redis
     networks:
       - shrimpvid_network
     restart: unless-stopped
+    volumes:
+      - ./cookies.txt:/app/cookies.txt:ro   # ro = read-only
 
 networks:
   shrimpvid_network:

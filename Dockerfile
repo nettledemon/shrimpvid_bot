@@ -7,7 +7,6 @@ WORKDIR /app
 
 # зависимости
 COPY pyproject.toml .
-
 RUN pip install --no-cache-dir .
 
 # код
