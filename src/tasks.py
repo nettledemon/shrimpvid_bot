@@ -26,6 +26,7 @@ from messages import (
     LINK_STEP3,
     LINK_STEP4,
     LINK_STEP5,
+    FORBIDDEN_VOICE_MESSAGE,
 )
 
 # конфиг редиса (в докере хостнейм redis)
@@ -42,6 +43,23 @@ async def safe_edit(bot: Bot, chat_id: int, message_id: int, text: str) -> None:
         await bot.edit_message_text(chat_id=chat_id, message_id=message_id, text=text)
     except BadRequest as e:
         if "Message is not modified" not in str(e):
+            raise
+
+
+# безопасная отправка видеокружка, ловит запрет на видеосообщения
+async def send_video_note_safe(bot: Bot, chat_id: int, video_file, **kwargs) -> bool:
+    try:
+        await bot.send_video_note(chat_id, video_file, **kwargs)
+        return True
+    except BadRequest as e:
+        if "Voice_messages_forbidden" in str(e):
+            await bot.send_message(
+                chat_id,
+                FORBIDDEN_VOICE_MESSAGE,
+                reply_markup=get_start_keyboard(),
+            )
+            return False
+        else:
             raise
 
 
@@ -76,9 +94,15 @@ async def process_video(
                 await asyncio.sleep(0.7)
 
                 with open(output_path, "rb") as f:
-                    await bot.send_video_note(
-                        chat_id, f, read_timeout=120, write_timeout=120
+                    success = await send_video_note_safe(
+                        bot, chat_id, f, read_timeout=120, write_timeout=120
                     )
+                if not success:
+                    # не удалось отправить из-за запрета
+                    await bot.delete_message(
+                        chat_id=chat_id, message_id=status_message_id
+                    )
+                    return
 
                 # финальное соо с кнопками
                 await bot.send_message(
@@ -158,9 +182,15 @@ async def process_link_video(
                 await asyncio.sleep(0.7)
 
                 with open(output_path, "rb") as f:
-                    await bot.send_video_note(
-                        chat_id, f, read_timeout=120, write_timeout=120
+                    success = await send_video_note_safe(
+                        bot, chat_id, f, read_timeout=120, write_timeout=120
                     )
+                if not success:
+                    # не удалось отправить из-за запрета
+                    await bot.delete_message(
+                        chat_id=chat_id, message_id=status_message_id
+                    )
+                    return
 
                 # финальное соо с кнопками
                 await bot.send_message(
