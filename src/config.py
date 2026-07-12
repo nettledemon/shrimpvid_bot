@@ -7,8 +7,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 load_dotenv(BASE_DIR / ".env")
 
 
-# токен бота из .env
 def get_bot_token() -> str:
+    """
+    токен бота из .env
+    """
+
     token = os.getenv("BOT_TOKEN")
     if not token:
         raise ValueError("BOT_TOKEN not found in .env")

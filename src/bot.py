@@ -18,11 +18,14 @@ from messages import (
 from tasks import process_video, process_link_video
 
 
-# обработка кнопок под сообщениями
 async def button_callback(
     update: Update,
     context: ContextTypes.DEFAULT_TYPE,
 ) -> None:
+    """
+    обработка кнопок под сообщениями
+    """
+
     query = update.callback_query
 
     # для mypy
@@ -52,11 +55,14 @@ async def button_callback(
         )
 
 
-# команда /start
 async def start(
     update: Update,
     context: ContextTypes.DEFAULT_TYPE,
 ) -> None:
+    """
+    команда /start
+    """
+
     assert update.message is not None
     assert context.user_data is not None
 
@@ -68,11 +74,14 @@ async def start(
     )
 
 
-# любое сообщение от пользователя
 async def handle_message(
     update: Update,
     context: ContextTypes.DEFAULT_TYPE,
 ) -> None:
+    """
+    любое сообщение от пользователя
+    """
+
     assert update.message is not None
     assert context.user_data is not None
 
@@ -99,8 +108,11 @@ async def handle_message(
         )
 
 
-# сборка приложения
 def get_application(token: str) -> Application:
+    """
+    сборка приложения
+    """
+
     app = Application.builder().token(token).build()
 
     app.add_handler(CommandHandler("start", start))
