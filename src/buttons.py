@@ -1,8 +1,11 @@
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup
 
 
-# инлайн-кнопки
 def get_start_keyboard() -> InlineKeyboardMarkup:
+    """
+    инлайн-кнопки
+    """
+
     button_file = InlineKeyboardButton(
         text="🍤 Сделать кружочек", callback_data="start_file"
     )
